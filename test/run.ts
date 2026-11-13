@@ -7,7 +7,8 @@ import { dirname, join } from 'node:path';
 import { configureEngine, loadEngine, checkEngine, sharedCorrections, tagEngine, tagForCheck as tagFixed } from '../src/index';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const dataDir = join(here, '..', 'data');
+// ENGINE_DATA: where the word lists are when this file is run from another project (see README).
+const dataDir = process.env.ENGINE_DATA ?? join(here, '..', 'data');
 configureEngine({ loadJson: async (name) => JSON.parse(readFileSync(join(dataDir, name), 'utf8')) });
 
 await loadEngine();

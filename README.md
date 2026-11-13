@@ -28,6 +28,8 @@ loader: `configureEngine({ loadJson: (name) => ... })` (see `test/run.ts`).
 
 ## Check it
 
+In a project that installs the engine, its build runs the same checks (Literacy Manipulatives: `npm run test:engine`).
+
 `npm test` runs every check (80 test sentences, her 121 formulas, her 118 formula cards, every shared fix) and fails
 if anything is wrong. GitHub runs it on every change.
 
