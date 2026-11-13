@@ -1,0 +1,16 @@
+# Every change to the engine is checked: 80 test sentences word for word, her 121 formulas, her 118 formula cards and
+# every shared teacher fix. A change that breaks any of them is marked failed and must not be released.
+name: Engine checks
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
