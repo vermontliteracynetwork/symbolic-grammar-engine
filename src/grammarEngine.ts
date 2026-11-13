@@ -18,6 +18,7 @@ import { loadWordTypes } from './wordTypes';
 // her board's word lists and the closed word groups. Its checks: writer/engineTests.ts and engineCheck.ts.
 
 export type { TaggedWord };
+export const ENGINE_VERSION = '1.1.0';
 
 // Load the word lists every tool needs before reading (safe to call many times).
 export function loadEngine(): Promise<void> {
@@ -49,6 +50,31 @@ export function isKnown(raw: string): boolean | null {
 
 const POSSESSIVE = /^(my|your|his|her|its|our|their)$/;
 const NUMBER = /^(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|hundred|first|second|third|last)$/;
+// A word's jobs in two lists: every job it can do, and its common jobs (WordNet's rare uses left out, so "cat" is not
+// a verb). null when no word list has the word.
+export function jobsDetail(raw: string): { all: SymbolWordClass[]; common: SymbolWordClass[] } | null {
+  const w = low(raw);
+  if (!w || !isKnown(raw)) return null;
+  const common = new Set<SymbolWordClass>([...(commonDictionaryJobs(w) ?? []), ...wordJobs(w)]);
+  for (const j of jobsOf(w)) if (!(dictionaryJobs(w) ?? []).includes(j)) common.add(j);
+  const all = jobsOfWord(raw);
+  return { all, common: common.size ? all.filter((j) => common.has(j)).concat([...common].filter((j) => !all.includes(j))) : all };
+}
+
+// A sentence given as a list of words (each item one word, punctuation already removed): one symbol per item, read in
+// context by the engine. Numbers and other items without letters describe the noun after them.
+export function readWords(list: string[]): SymbolWordClass[] {
+  const read = readText(list.join(' '));
+  let k = 0;
+  return list.map((item) => {
+    const n = (item.match(/[A-Za-z']+/g) ?? []).length;
+    if (!n) return 'adjective';
+    const first = read[k];
+    k += n;
+    return first?.wordClass ?? 'noun';
+  });
+}
+
 // Does a student's word do this job? It uses the word's common jobs (so "cat" is not a verb) and the things her
 // symbols count under another name: a name is a noun too; my, their, a number or an 's word describes a noun;
 // an -ing or -ed doing word can describe one ("the running water"). 'unknown' when no word list has the word.
@@ -56,11 +82,9 @@ export function fitsJob(raw: string, want: SymbolWordClass): 'yes' | 'no' | 'unk
   const w = low(raw);
   if (!w) return 'unknown';
   if (want === 'propernoun') return /^[A-Z]/.test(raw.trim()) ? 'yes' : isKnown(raw) ? 'no' : 'unknown';
-  if (!isKnown(raw)) return 'unknown';
-  const common = new Set<SymbolWordClass>([...(commonDictionaryJobs(w) ?? []), ...wordJobs(w)]);
-  // Closed word groups (the, my, and, in...) from the tagger, without WordNet's rare uses.
-  for (const j of jobsOf(w)) if (!(dictionaryJobs(w) ?? []).includes(j)) common.add(j);
-  if (!common.size) for (const j of jobsOf(w)) common.add(j);
+  const d = jobsDetail(raw);
+  if (!d) return 'unknown';
+  const common = new Set<SymbolWordClass>(d.common);
   if (common.has(want)) return 'yes';
   if (want === 'noun' && common.has('propernoun')) return 'yes';
   // An action word can name a thing too: "a jump", "a swim" (WordNet lists it as a noun).

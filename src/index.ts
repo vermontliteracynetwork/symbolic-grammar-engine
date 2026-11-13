@@ -2,7 +2,7 @@
 // See README.md (how to use it) and RULES.md (every rule, in plain words).
 export { configureEngine, type EngineConfig } from './config';
 export {
-  loadEngine, engineReady, readText, symbolsFor, readWithWhy, jobsOfWord, isKnown, fitsJob, mainJob, TYPE_NAME,
+  ENGINE_VERSION, loadEngine, engineReady, readText, readWords, symbolsFor, readWithWhy, jobsOfWord, jobsDetail, isKnown, fitsJob, mainJob, TYPE_NAME,
   type WordReading, type TaggedWord,
 } from './grammarEngine';
 export { GRAMMAR_SYMBOL_INFO, TENSE_SYMBOLS, type SymbolWordClass, type WordClassInfo } from './grammarSymbols';
@@ -14,3 +14,4 @@ export { addCorrection, removeCorrection, corrections, sharedCorrections, setSha
 export { checkEngine, type EngineCheck } from './writer/engineCheck';
 export { TAG_TESTS, type TagTest } from './writer/engineTests';
 export { tenseVersions, pastOf, baseOf, third } from './writer/tenses';
+export { lookUpWords, onWordTypes, liveLookupsAllowed } from './wordTypes';

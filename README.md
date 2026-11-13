@@ -8,8 +8,9 @@ Procedure) and the independent work dashboard.
 
 ## Use it in a project
 
-1. Install it (pin a version so every project uses the same rules):
-   `npm install github:vermontliteracynetwork/symbolic-grammar-engine#v1.0.0`
+1. Install it, pinned to one version (a commit) so every project uses the same rules:
+   `npm install github:vermontliteracynetwork/symbolic-grammar-engine#<commit>`
+   Every project pins the same commit; see Versions below.
 2. Copy its word lists and symbol pictures into the app's public folder (add this to `predev` and `prebuild`):
    `node node_modules/symbolic-grammar-engine/scripts/copy-assets.mjs public`
 3. Use it:
@@ -41,3 +42,13 @@ A teacher's fixes from Formula Search ("Send my fixes to the engine") are added 
 - `data/words.json`: SCOWL word lists (`data/WORDLIST-COPYRIGHT.txt`).
 - `assets/grammar-symbols/`: her grammar symbol pictures (owned).
 - Formula list and formula codes: her Symbolic Grammar materials (owned).
+
+## Versions
+
+Every project pins the same engine commit. To update a project: change the commit in its package.json, run
+`npm install`, and its build runs the engine checks.
+
+- **1.1.0** (2026-11-13): `readWords` (a sentence as a list of words), `jobsDetail` (all and common jobs of a word),
+  `lookUpWords`/`onWordTypes` exported, and every source file importable as `symbolic-grammar-engine/src/...`, so the
+  independent work dashboard can use the engine. Same rules and results as 1.0.0.
+- **1.0.0** (2026-11-13): the engine moved here from Literacy Manipulatives.
