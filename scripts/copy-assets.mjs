@@ -1,6 +1,7 @@
 // Copies the engine's word lists and grammar symbol pictures into an app's public folder, where the engine loads
 // them in the browser (configureEngine's dataUrl, default /writer; symbols at /literacy/grammar-symbols).
-// Usage: node <engine>/scripts/copy-assets.mjs <app public folder>
+// Usage: node <engine>/scripts/copy-assets.mjs <app public folder> [--no-symbols]
+// --no-symbols: copy only the word lists (an app that keeps its own symbol pictures).
 import fs from 'node:fs';
 import path from 'node:path';
 const here = path.dirname(path.dirname(new URL(import.meta.url).pathname));
@@ -11,5 +12,5 @@ const copyDir = (from, to) => {
   for (const f of fs.readdirSync(from)) fs.copyFileSync(path.join(from, f), path.join(to, f));
 };
 copyDir(path.join(here, 'data'), path.join(pub, 'writer'));
-copyDir(path.join(here, 'assets', 'grammar-symbols'), path.join(pub, 'literacy', 'grammar-symbols'));
+if (!process.argv.includes('--no-symbols')) copyDir(path.join(here, 'assets', 'grammar-symbols'), path.join(pub, 'literacy', 'grammar-symbols'));
 console.log('Symbolic Grammar Engine: word lists and symbols copied to', pub);

@@ -2,10 +2,15 @@
 // `npm run engine:assets` copies them); a Node script or test passes its own `loadJson` that reads the files.
 let dataUrl = '/writer';
 let custom: ((name: string) => Promise<unknown>) | null = null;
-export interface EngineConfig { dataUrl?: string; loadJson?: (name: string) => Promise<unknown> }
+// liveLookups: true lets the engine ask outside dictionaries for words its lists do not have (the independent work
+// dashboard); false never does; left out, a teacher's "Allow live lookups" setting decides (Literacy Manipulatives).
+export interface EngineConfig { dataUrl?: string; loadJson?: (name: string) => Promise<unknown>; liveLookups?: boolean }
+let live: boolean | undefined;
+export const liveLookupsSetting = () => live;
 export function configureEngine(c: EngineConfig) {
   if (c.dataUrl) dataUrl = c.dataUrl.replace(/\/$/, '');
   if (c.loadJson) custom = c.loadJson;
+  if (c.liveLookups !== undefined) live = c.liveLookups;
 }
 export function loadJson<T>(name: string): Promise<T> {
   if (custom) return custom(name) as Promise<T>;

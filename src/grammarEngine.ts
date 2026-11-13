@@ -18,7 +18,7 @@ import { loadWordTypes } from './wordTypes';
 // her board's word lists and the closed word groups. Its checks: writer/engineTests.ts and engineCheck.ts.
 
 export type { TaggedWord };
-export const ENGINE_VERSION = '1.1.0';
+export const ENGINE_VERSION = '1.2.0';
 
 // Load the word lists every tool needs before reading (safe to call many times).
 export function loadEngine(): Promise<void> {

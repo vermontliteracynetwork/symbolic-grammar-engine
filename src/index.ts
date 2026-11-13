@@ -14,4 +14,4 @@ export { addCorrection, removeCorrection, corrections, sharedCorrections, setSha
 export { checkEngine, type EngineCheck } from './writer/engineCheck';
 export { TAG_TESTS, type TagTest } from './writer/engineTests';
 export { tenseVersions, pastOf, baseOf, third } from './writer/tenses';
-export { lookUpWords, onWordTypes, liveLookupsAllowed } from './wordTypes';
+export { lookUpWords, onWordTypes, liveLookupsAllowed, rememberTypes, typeOfPart, loadWordTypes } from './wordTypes';

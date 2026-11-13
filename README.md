@@ -50,6 +50,8 @@ A teacher's fixes from Formula Search ("Send my fixes to the engine") are added 
 Every project pins the same engine commit. To update a project: change the commit in its package.json, run
 `npm install`, and its build runs the engine checks.
 
+- **1.2.0** (2026-11-13): `configureEngine({ liveLookups })` (the dashboard keeps its live dictionary lookups), `rememberTypes` and
+  `typeOfPart` (a dictionary lookup in an app teaches the engine), and `copy-assets.mjs --no-symbols`. Same rules and results.
 - **1.1.0** (2026-11-13): `readWords` (a sentence as a list of words), `jobsDetail` (all and common jobs of a word),
   `lookUpWords`/`onWordTypes` exported, and every source file importable as `symbolic-grammar-engine/src/...`, so the
   independent work dashboard can use the engine. Same rules and results as 1.0.0.

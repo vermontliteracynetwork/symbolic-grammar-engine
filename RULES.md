@@ -1,6 +1,6 @@
 # Symbolic Grammar Engine: the rules
 
-Version 1.1.0 (2026-11-13). This is the rulebook for the one grammar engine that every Symbolic Grammar and Literacy
+Version 1.2.0 (2026-11-13). This is the rulebook for the one grammar engine that every Symbolic Grammar and Literacy
 Manipulatives project uses. It says, in plain words, how the engine gives each word its grammar symbol and how it
 writes a sentence's formula code. The curriculum (her Symbolic Grammar doc and her research with Beth) and the engine
 follow the same rules. When a rule changes in one, it changes here, and a test sentence is added (see the end).

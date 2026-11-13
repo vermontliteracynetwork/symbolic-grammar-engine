@@ -1,4 +1,4 @@
-import { loadJson } from './config';
+import { liveLookupsSetting, loadJson } from './config';
 // Her request 2026-11-11 (her words: "i need a connection for a dictionary to truly reference what word types are (ex. part of
 // speech) and really have a better engine behind the symbolic grammar function"). The same engine runs in her
 // independent work dashboard's symbol sentences (src/lib/wordTypes.ts there), so a word gets the same symbol in both.
@@ -94,7 +94,7 @@ async function fetchTypes(w: string): Promise<WordType[] | null> {
 // Look up any of these words no dictionary here knows. Resolves when they're in, or after `ms` either way.
 // Outside dictionaries are behind a teacher setting, off unless a teacher turns on "Allow live lookups" (Word Explorer
 // build spec section 10; the setting is in Word Explorer's Settings, Teacher view).
-export const liveLookupsAllowed = () => { try { return localStorage.getItem('lm-live-lookups') === 'on'; } catch { return false; } };
+export const liveLookupsAllowed = () => { const set = liveLookupsSetting(); if (set !== undefined) return set; try { return localStorage.getItem('lm-live-lookups') === 'on'; } catch { return false; } };
 export function lookUpWords(list: string[], ms = 2500): Promise<void> {
   if (!liveLookupsAllowed()) return Promise.resolve();
   const jobs = list.map(key).filter((w) => w.length > 1 && /^[a-z'-]+$/.test(w) && !localTypes(w) && !ONLINE.has(w) && !BLOCKED.test(w))
@@ -105,6 +105,16 @@ export function lookUpWords(list: string[], ms = 2500): Promise<void> {
   if (!jobs.length) return Promise.resolve();
   return Promise.race([Promise.all(jobs).then(() => {}), new Promise<void>((r) => setTimeout(r, ms))]);
 }
+
+// A dictionary lookup made elsewhere in an app teaches the engine too: the word is then known to every grammar check,
+// with the parts of speech the dictionary gave it (the independent work dashboard's Dictionary tool).
+export function rememberTypes(raw: string, parts: string[]) {
+  const w = key(raw);
+  if (!w || localTypes(w)) return;
+  const t = [...new Set(parts.map((p) => ONLINE_PART[p.toLowerCase()]).filter(Boolean))];
+  if (t.length) { ONLINE.set(w, t); save(); notify(); }
+}
+export const typeOfPart = (part: string): WordType | undefined => ONLINE_PART[part.toLowerCase()];
 
 // Screens that show word types redraw when a dictionary arrives.
 const listeners = new Set<() => void>();
