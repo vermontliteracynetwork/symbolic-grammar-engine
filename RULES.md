@@ -162,3 +162,10 @@ A word's jobs list (`jobsOfWord`, `jobsDetail`) now starts with its jobs from th
 pronouns, prepositions, joining words, interjections, helping and pointing words), then the dictionary's. So "that"
 is a pointing word, a pronoun and a joining word ("I think that dogs are smart"), and "a" is an article before it is
 the letter.
+
+## 1.3.3: her prepositions list
+
+Every word on her Prepositional Phrases list is a preposition in the engine (amid, atop, concerning, regarding,
+throughout and underneath were added), and `PREPOSITION_LIST` keeps her whole list, word groups included (according
+to, because of, in spite of, instead of, on account of, out of). Her rule stands: a word from the list with no object
+after it is not working as a preposition.

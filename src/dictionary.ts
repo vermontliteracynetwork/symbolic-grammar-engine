@@ -136,3 +136,12 @@ export const JOB_RULES: JobRule[] = [
 /** The rule card for two jobs, in either order. */
 export const jobRuleFor = (a: SymbolWordClass, b: SymbolWordClass): JobRule | undefined =>
   JOB_RULES.find((r) => (r.jobs[0] === a && r.jobs[1] === b) || (r.jobs[0] === b && r.jobs[1] === a));
+
+/** Her prepositions list (Prepositional Phrases, 2026-11-17): every word and word group that can start a prepositional
+ *  phrase. A word from the list with no object after it is not working as a preposition ("She looked up."). */
+export const PREPOSITION_LIST: string[] = [
+  'about', 'above', 'according to', 'across', 'after', 'against', 'along', 'amid', 'among', 'around', 'at', 'atop', 'because of', 'before',
+  'below', 'beneath', 'beside', 'between', 'beyond', 'but (meaning except)', 'by', 'concerning', 'down', 'during', 'except', 'for', 'from',
+  'in', 'in spite of', 'inside', 'instead of', 'into', 'like', 'near', 'of', 'off', 'on', 'on account of', 'onto', 'out', 'out of', 'outside',
+  'over', 'regarding', 'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without',
+];
