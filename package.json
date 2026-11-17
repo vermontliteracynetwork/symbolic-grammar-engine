@@ -1,6 +1,6 @@
 {
   "name": "symbolic-grammar-engine",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "One grammar engine for every Symbolic Grammar and Literacy Manipulatives project: grammar symbols for every word, sentence formulas and her formula codes.",
   "type": "module",
   "private": true,

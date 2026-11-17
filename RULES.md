@@ -145,3 +145,13 @@ them differ from her own written rules rather than from the engine:
 - "The small cat chased Max." is listed as S2.A.J.PN, but her code order (A, PN, P, V, J, B, PRP, N, I, C) gives S2.A.PN.J.
 - "First, wash your hands." is listed as B(C2.P), but her rule 7 (a one-part sentence has no parentheses; the opening
   word and its comma go in front) gives B,C2.P.
+
+## Words with more than one job (1.3.1)
+
+Part of speech is the heart of Symbolic Grammar, so the engine lists every word that can do more than one job
+(`multiJobWords()`: about 2,100 of the most common words, each with its jobs, common uses first) and keeps one rule card
+for each pair of jobs (`JOB_RULES`: noun or verb, adjective or noun, adjective or verb, adjective or adverb, preposition
+or adverb, preposition or joining word, adjective or pronoun, noun or adverb). Each card has the rules in student words
+and example pairs that use the same word both ways; `npm test` reads every example pair and reports any the engine does
+not read the way its card says. Still to teach the engine: noun or adverb ("Home is warm." / "We went home.",
+"Yesterday was fun." / "We played yesterday.").

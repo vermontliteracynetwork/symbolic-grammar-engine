@@ -4,7 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { configureEngine, loadEngine, checkEngine, sharedCorrections, tagEngine, tagForCheck as tagFixed, wordsOfType, verbForms, MASTER_CARDS } from '../src/index';
+import { configureEngine, loadEngine, checkEngine, sharedCorrections, tagEngine, tagForCheck as tagFixed, wordsOfType, verbForms, MASTER_CARDS, multiJobWords, JOB_RULES, readText } from '../src/index';
 
 const here = dirname(fileURLToPath(import.meta.url));
 // ENGINE_DATA: where the word lists are when this file is run from another project (see README).
@@ -43,6 +43,15 @@ for (const [type, must] of dict) {
 }
 if (verbForms('run').past !== 'ran' || verbForms('swim').ing !== 'swimming') { failed++; console.log('  WRONG  verb forms'); }
 console.log(`Master formula cards: ${MASTER_CARDS.length}.`);
+console.log(`Words with more than one job: ${multiJobWords().length}.`);
+// Every example in the job rules must read the way its rule says: the same word, two different jobs.
+let rulesOk = 0;
+for (const r of JOB_RULES) for (const [a, b] of r.examples) {
+  const wa = readText(a), wb = readText(b);
+  const shared = wa.map((x) => x.word.toLowerCase()).find((w) => wb.some((y) => y.word.toLowerCase() === w) && wa.find((x) => x.word.toLowerCase() === w)!.wordClass !== wb.find((y) => y.word.toLowerCase() === w)!.wordClass && r.jobs.includes(wa.find((x) => x.word.toLowerCase() === w)!.wordClass) && r.jobs.includes(wb.find((y) => y.word.toLowerCase() === w)!.wordClass));
+  if (shared) rulesOk++; else console.log(`  CHECK  job rule "${r.title}": "${a}" / "${b}" do not read as ${r.jobs.join(' and ')}`);
+}
+console.log(`Job rule examples: ${rulesOk} of ${JOB_RULES.reduce((n, r) => n + r.examples.length, 0)} read both ways.`);
 void tagEngine;
 if (failed) { console.log(`\n${failed} problem(s). Fix the rule (or the test, if the test is wrong) before merging.`); process.exit(1); }
 console.log('\nAll engine checks passed.');

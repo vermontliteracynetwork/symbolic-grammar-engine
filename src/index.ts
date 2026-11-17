@@ -10,7 +10,7 @@ export { formulaCode, sentenceSlots, cardSlotsOf, closestFormula, formulasLike, 
 export { FORMULA_LIST, type ListedFormula } from './writer/formulaList';
 export { MASTER_FORMULAS, type MasterFormula } from './writer/masterList';
 export { MASTER_CARDS, type MasterCard } from './writer/masterCards';
-export { wordsOfType, pluralOf, ingOf, verbForms } from './dictionary';
+export { wordsOfType, pluralOf, ingOf, verbForms, multiJobWords, JOB_RULES, jobRuleFor, type MultiJobWord, type JobRule } from './dictionary';
 export { SENTENCE_FORMULAS, type SentenceFormula } from './writer/formulas';
 export { splitSentences, checkSentence, tagForCheck, tagEngine, type SentenceSpan, type CheckResult } from './writer/sentenceCheck';
 export { addCorrection, removeCorrection, corrections, sharedCorrections, setSharedCorrections, accuracy, type Correction } from './writer/corrections';
