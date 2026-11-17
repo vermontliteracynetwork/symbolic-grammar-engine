@@ -56,3 +56,12 @@ Every project pins the same engine commit. To update a project: change the commi
   `lookUpWords`/`onWordTypes` exported, and every source file importable as `symbolic-grammar-engine/src/...`, so the
   independent work dashboard can use the engine. Same rules and results as 1.0.0.
 - **1.0.0** (2026-11-13): the engine moved here from Literacy Manipulatives.
+
+## One dictionary (1.3.0)
+
+`wordsOfType(type, maxRank?)` lists the dictionary's words by grammar symbol (noun, verb, adjective, adverb,
+preposition...), A to Z, using the same `jobsOfWord()` logic that reads every sentence; `pluralOf`, `ingOf` and
+`verbForms` write word forms. `MASTER_FORMULAS` is her master formula list ("All Formulas", imported by
+`scripts/import-master-list.py`), `FORMULA_LIST` reads it, and `MASTER_CARDS` is every master-list formula as a card
+(with her printed card picture when there is one). Every program (Literacy Manipulatives, the independent work
+dashboard) reads formulas and word types from here.

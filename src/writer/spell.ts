@@ -56,6 +56,8 @@ export function loadWords(): Promise<void> {
   return loading;
 }
 export const wordsReady = () => RANK.size > 0;
+/** Every word in the word lists, most common first (rank 0 = most common ... 3 = less common), up to maxRank. */
+export const wordsRanked = (maxRank = 0): string[] => [...RANK].filter(([, r]) => r <= maxRank).map(([w]) => w);
 // How common a word is (0 = most common), or undefined when the list doesn't have it.
 export const wordRank = (raw: string) => RANK.get(raw.toLowerCase());
 
