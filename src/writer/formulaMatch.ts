@@ -195,7 +195,7 @@ function clauseCode(c: Slot[], end: string, first: boolean, opts: { exclaim?: bo
   let parts = [
     ...count((s) => s.slot === 'article', 'A'), ...count((s) => s.slot === 'propernoun' && !owns(s), 'PN'), ...count((s) => s.slot === 'propernoun' && owns(s), "PN's"),
     ...count((s) => s.slot === 'pronoun', 'P'), ...count((s) => s.slot === 'noun' && owns(s), "N's"), ...count(appositive, 'N'), ...Array(Math.max(0, verbs.length - 1)).fill('V'),
-    ...count((s) => s.slot === 'adjective', 'J'), ...count((s) => s.slot === 'adverb', 'B'), ...count((s) => s.slot === 'phrase' && !s.place, 'PRP'), ...count((s) => !!s.place, 'R'),
+    ...count((s) => s.slot === 'adjective', 'J'), ...count((s) => s.slot === 'adverb', 'B'), ...count((s) => s.slot === 'phrase' || !!s.place, 'PRP'),
     ...count((s) => s.slot === 'conjunction', 'C'), ...count((s) => s.slot === 'interjection', 'I'),
   ];
   // A contraction joins its two parts with an apostrophe: "We're" P'V, "isn't" V'B.

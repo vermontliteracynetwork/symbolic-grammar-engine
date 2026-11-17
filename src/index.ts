@@ -8,10 +8,11 @@ export {
 export { GRAMMAR_SYMBOL_INFO, TENSE_SYMBOLS, type SymbolWordClass, type WordClassInfo } from './grammarSymbols';
 export { formulaCode, sentenceSlots, cardSlotsOf, closestFormula, formulasLike, slotDistance, slotLabel, slotClass, type Slot } from './writer/formulaMatch';
 export { FORMULA_LIST, type ListedFormula } from './writer/formulaList';
+export { MASTER_FORMULAS, type MasterFormula } from './writer/masterList';
 export { SENTENCE_FORMULAS, type SentenceFormula } from './writer/formulas';
 export { splitSentences, checkSentence, tagForCheck, tagEngine, type SentenceSpan, type CheckResult } from './writer/sentenceCheck';
 export { addCorrection, removeCorrection, corrections, sharedCorrections, setSharedCorrections, accuracy, type Correction } from './writer/corrections';
-export { checkEngine, type EngineCheck } from './writer/engineCheck';
+export { checkEngine, TO_TEACH, type EngineCheck } from './writer/engineCheck';
 export { TAG_TESTS, type TagTest } from './writer/engineTests';
 export { tenseVersions, pastOf, baseOf, third } from './writer/tenses';
 export { lookUpWords, onWordTypes, liveLookupsAllowed, rememberTypes, typeOfPart, loadWordTypes } from './wordTypes';

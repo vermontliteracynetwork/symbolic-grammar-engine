@@ -84,7 +84,7 @@ park") is one card, and **required words** (be, will, do, not, feel, said, and, 
 - N's a noun that owns ("the dog's"); PN's a name that owns.
 - N a noun set off by commas that renames the subject ("Max, **my dog**, barked": S1.PN.P.N).
 - V each extra verb; J describing word; B how word; PRP prepositional phrase.
-- R an in/at phrase naming a place, or an on/in phrase naming a day, month or holiday ("Luna lives **in Texas**": S1.PN.R, her working code).
+- A phrase naming a place, day, month or holiday is a prepositional phrase like any other: PRP ("Luna lives **in Texas**": S1.PN.PRP, her master list 2026-11-17; the earlier working code R is retired).
 - C joining word; I interjection.
 - A contraction joins its parts with an apostrophe: P'V ("We're"), V'B ("isn't"), V'P ("Let's").
 - In an S4 sentence with a pronoun in the subject, P comes before A ("My room is a tornado": S4.P.A); otherwise A comes first ("Max is a dog": S4.A.PN).
@@ -135,3 +135,13 @@ When she and Beth decide a rule in the curriculum, or a sentence is marked wrong
 4. Run `npm test` until every check passes, then raise the version number and update each project.
 
 A rule is not changed unless every older test still passes, so a fix for one sentence cannot break another.
+
+## Her master list (2026-11-17)
+
+Her "All Formulas" PDF is the one formula list (`src/writer/masterList.ts`, made by `scripts/import-master-list.py`;
+`FORMULA_LIST` reads it). `npm test` codes every model sentence in it. The engine codes 120 of 129 her way; the other
+nine are in `TO_TEACH` (`src/writer/engineCheck.ts`) and print as "still to teach" without stopping a build. Two of
+them differ from her own written rules rather than from the engine:
+- "The small cat chased Max." is listed as S2.A.J.PN, but her code order (A, PN, P, V, J, B, PRP, N, I, C) gives S2.A.PN.J.
+- "First, wash your hands." is listed as B(C2.P), but her rule 7 (a one-part sentence has no parentheses; the opening
+  word and its comma go in front) gives B,C2.P.

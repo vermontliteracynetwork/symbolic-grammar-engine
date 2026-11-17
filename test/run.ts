@@ -18,6 +18,8 @@ console.log(`Symbols: ${r.tags.pass} of ${r.tags.total} test sentences right wor
 for (const m of r.tags.misses) { failed++; console.log(`  WRONG  ${m.sentence}\n         engine: ${m.got.join(' ')}\n         should: ${m.expect.join(' ')}`); }
 console.log(`Formula codes: ${r.codes.pass} of ${r.codes.total} examples in her list coded right.`);
 for (const m of r.codes.misses) { failed++; console.log(`  WRONG  ${m.sentence}  engine: ${m.got}  her list: ${m.expect}`); }
+if (r.codes.toTeach.length) console.log(`Still to teach the engine (${r.codes.toTeach.length}, listed in TO_TEACH; they do not stop a build):`);
+for (const m of r.codes.toTeach) console.log(`  LATER  ${m.sentence}  engine: ${m.got}  her list: ${m.expect}`);
 console.log(`Formula cards: ${r.cards.pass} of ${r.cards.total} model sentences match their own card.`);
 for (const m of r.cards.misses) { failed++; console.log(`  WRONG  card ${m.lesson}: ${m.sentence}`); }
 // Every shared fix must hold (with the fixes applied, the fixed word gets the fixed symbol).
