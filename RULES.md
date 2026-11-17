@@ -155,3 +155,10 @@ or adverb, preposition or joining word, adjective or pronoun, noun or adverb). E
 and example pairs that use the same word both ways; `npm test` reads every example pair and reports any the engine does
 not read the way its card says. Still to teach the engine: noun or adverb ("Home is warm." / "We went home.",
 "Yesterday was fun." / "We played yesterday.").
+
+## 1.3.2: closed words first
+
+A word's jobs list (`jobsOfWord`, `jobsDetail`) now starts with its jobs from the closed word groups (articles,
+pronouns, prepositions, joining words, interjections, helping and pointing words), then the dictionary's. So "that"
+is a pointing word, a pronoun and a joining word ("I think that dogs are smart"), and "a" is an article before it is
+the letter.

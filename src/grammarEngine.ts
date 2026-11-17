@@ -4,7 +4,7 @@ import { wordJobs } from './sentenceSearch';
 import { tagForCheck } from './writer/sentenceCheck';
 import { jobsOf, type TaggedWord } from './writer/tagger';
 import { commonDictionaryJobs, dictionaryJobs, isWord, loadWords, wordsReady } from './writer/spell';
-import { loadWordTypes } from './wordTypes';
+import { closedTypesOf, loadWordTypes } from './wordTypes';
 
 // THE grammar engine for every Literacy Manipulatives tool (her request 2026-11-13: "move everything onto the same
 // engine"; "we need to have a strong logic behind our mark ups and grammar symbols that can run all programs").
@@ -18,7 +18,7 @@ import { loadWordTypes } from './wordTypes';
 // her board's word lists and the closed word groups. Its checks: writer/engineTests.ts and engineCheck.ts.
 
 export type { TaggedWord };
-export const ENGINE_VERSION = '1.3.1';
+export const ENGINE_VERSION = '1.3.2';
 
 // Load the word lists every tool needs before reading (safe to call many times).
 export function loadEngine(): Promise<void> {
@@ -38,7 +38,9 @@ const low = (w: string) => w.trim().toLowerCase().replace(/[’]/g, "'").replace
 export function jobsOfWord(raw: string): SymbolWordClass[] {
   const w = low(raw);
   if (!w) return [];
-  const order = [...(commonDictionaryJobs(w) ?? []), ...(dictionaryJobs(w) ?? []), ...jobsOf(w)];
+  // The closed word groups first ("that" is a pointing word, a pronoun and a joining word), then the dictionary.
+  const closed = closedTypesOf(w) as SymbolWordClass[];
+  const order = [...closed, ...(commonDictionaryJobs(w) ?? []), ...(dictionaryJobs(w) ?? []), ...jobsOf(w)];
   return [...new Set(order)];
 }
 // Is the word in any word list the engine has (null while the lists are still loading)?
@@ -55,7 +57,7 @@ const NUMBER = /^(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|tw
 export function jobsDetail(raw: string): { all: SymbolWordClass[]; common: SymbolWordClass[] } | null {
   const w = low(raw);
   if (!w || !isKnown(raw)) return null;
-  const common = new Set<SymbolWordClass>([...(commonDictionaryJobs(w) ?? []), ...wordJobs(w)]);
+  const common = new Set<SymbolWordClass>([...(closedTypesOf(w) as SymbolWordClass[]), ...(commonDictionaryJobs(w) ?? []), ...wordJobs(w)]);
   for (const j of jobsOf(w)) if (!(dictionaryJobs(w) ?? []).includes(j)) common.add(j);
   const all = jobsOfWord(raw);
   return { all, common: common.size ? all.filter((j) => common.has(j)).concat([...common].filter((j) => !all.includes(j))) : all };

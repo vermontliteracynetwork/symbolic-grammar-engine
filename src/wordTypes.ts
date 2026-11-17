@@ -26,7 +26,7 @@ const POINTING = words('this that these those');
 const QUANTITY = words('some any many much few all both each every several another other such enough more most less least either neither no');
 const NUMBER = /^(\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|last)$/;
 const PREPOSITION = words('about above across after against along among around at before behind below beneath beside besides between beyond by down during except for from in inside into like near of off on onto out outside over past since through throughout to toward towards under underneath until up upon with within without');
-const CONJUNCTION = words('and but or nor so yet because although though if unless while whereas than whether since until after before as once when whenever where wherever');
+const CONJUNCTION = words('and but or nor so yet because although though if unless while whereas than whether since until after before as once when whenever where wherever that');
 const INTERJECTION = words('wow oh ouch hooray yikes hey oops yay aha ah hi hello bye goodbye yes no ugh eek phew whoa yum yuck ow shh hmm boo gosh ha alas bravo okay ok uh um aw yippee huh');
 const HELPER = words('am is are was were be been being do does did have has had will would can could shall should may might must');
 const ADVERB = words('not never always often sometimes usually very really too also just now then here there soon again still already almost quite ever today tonight tomorrow yesterday away back even only maybe perhaps later together instead however please finally everywhere somewhere anywhere nowhere');
@@ -61,6 +61,9 @@ export function loadWordTypes(): Promise<void> {
   return loading;
 }
 export const wordTypesReady = () => DICT.size > 0;
+/** The closed word groups' jobs for a word (articles, pronouns, prepositions, joining words, interjections, helping and
+ *  pointing words), listed in full above; [] for any other word. */
+export const closedTypesOf = (raw: string): WordType[] => [...(CLOSED.get(raw.trim().toLowerCase()) ?? [])];
 
 // ---------- the live dictionary (words WordNet doesn't list) ----------
 const ONLINE = new Map<string, WordType[] | null>();
