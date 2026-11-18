@@ -1,4 +1,6 @@
-// Symbolic Grammar Engine: one grammar engine for every Symbolic Grammar and Literacy Manipulatives project.
+// Symbolic Grammar Engine: her Symbolic Grammar curriculum as code (symbols, formulas, formula codes and the rules for
+// reading a word's job). It is the only thing Literacy Manipulatives and the independent work dashboard share; each
+// program keeps its own app code (games, dictionaries, pictures, word lists, saved words).
 // See README.md (how to use it) and RULES.md (every rule, in plain words).
 export { configureEngine, type EngineConfig } from './config';
 export {
@@ -9,8 +11,7 @@ export { GRAMMAR_SYMBOL_INFO, TENSE_SYMBOLS, type SymbolWordClass, type WordClas
 export { formulaCode, sentenceSlots, cardSlotsOf, closestFormula, formulasLike, slotDistance, slotLabel, slotClass, type Slot } from './writer/formulaMatch';
 export { FORMULA_LIST, type ListedFormula } from './writer/formulaList';
 export { MASTER_FORMULAS, type MasterFormula } from './writer/masterList';
-export { MASTER_CARDS, type MasterCard } from './writer/masterCards';
-export { wordsOfType, pluralOf, ingOf, verbForms, multiJobWords, JOB_RULES, jobRuleFor, PREPOSITION_LIST, type MultiJobWord, type JobRule } from './dictionary';
+export { multiJobWords, JOB_RULES, jobRuleFor, PREPOSITION_LIST, type MultiJobWord, type JobRule } from './jobRules';
 export { SENTENCE_FORMULAS, type SentenceFormula } from './writer/formulas';
 export { splitSentences, checkSentence, tagForCheck, tagEngine, type SentenceSpan, type CheckResult } from './writer/sentenceCheck';
 export { addCorrection, removeCorrection, corrections, sharedCorrections, setSharedCorrections, accuracy, type Correction } from './writer/corrections';

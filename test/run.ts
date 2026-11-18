@@ -4,7 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { configureEngine, loadEngine, checkEngine, sharedCorrections, tagEngine, tagForCheck as tagFixed, wordsOfType, verbForms, MASTER_CARDS, multiJobWords, JOB_RULES, readText } from '../src/index';
+import { configureEngine, loadEngine, checkEngine, sharedCorrections, tagEngine, tagForCheck as tagFixed, multiJobWords, JOB_RULES, readText } from '../src/index';
 
 const here = dirname(fileURLToPath(import.meta.url));
 // ENGINE_DATA: where the word lists are when this file is run from another project (see README).
@@ -33,16 +33,6 @@ for (const c of fixes) {
   else { failed++; console.log(`  WRONG  shared fix "${c.word}" in "${c.sentence}" should be ${c.to}`); }
 }
 console.log(`Shared fixes: ${fixesOk} of ${fixes.length} hold.`);
-// The one dictionary: every type has words, and the words land where they should.
-const dict: [Parameters<typeof wordsOfType>[0], string[]][] = [['noun', ['dog', 'park']], ['verb', ['run', 'jump']], ['adjective', ['big', 'happy']], ['adverb', ['quickly']], ['preposition', ['on', 'at', 'in', 'from']]];
-for (const [type, must] of dict) {
-  const list = wordsOfType(type);
-  const missing = must.filter((w) => !list.includes(w));
-  if (missing.length) { failed++; console.log(`  WRONG  dictionary ${type}s are missing ${missing.join(', ')}`); }
-  else console.log(`Dictionary: ${list.length} ${type}s.`);
-}
-if (verbForms('run').past !== 'ran' || verbForms('swim').ing !== 'swimming') { failed++; console.log('  WRONG  verb forms'); }
-console.log(`Master formula cards: ${MASTER_CARDS.length}.`);
 console.log(`Words with more than one job: ${multiJobWords().length}.`);
 // Every example in the job rules must read the way its rule says: the same word, two different jobs.
 let rulesOk = 0;

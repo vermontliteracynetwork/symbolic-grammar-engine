@@ -50,6 +50,8 @@ A teacher's fixes from Formula Search ("Send my fixes to the engine") are added 
 Every project pins the same engine commit. To update a project: change the commit in its package.json, run
 `npm install`, and its build runs the engine checks.
 
+- **1.4.0** (2026-11-18): curriculum only (see What belongs here). `dictionary.ts` is now `jobRules.ts`; Literacy
+  Manipulatives' word lists, card pictures and My dictionary moved into that app; `configureEngine({ ownWord })`. Same rules and results.
 - **1.2.0** (2026-11-13): `configureEngine({ liveLookups })` (the dashboard keeps its live dictionary lookups), `rememberTypes` and
   `typeOfPart` (a dictionary lookup in an app teaches the engine), and `copy-assets.mjs --no-symbols`. Same rules and results.
 - **1.1.0** (2026-11-13): `readWords` (a sentence as a list of words), `jobsDetail` (all and common jobs of a word),
@@ -57,11 +59,20 @@ Every project pins the same engine commit. To update a project: change the commi
   independent work dashboard can use the engine. Same rules and results as 1.0.0.
 - **1.0.0** (2026-11-13): the engine moved here from Literacy Manipulatives.
 
-## One dictionary (1.3.0)
+## What belongs here (1.4.0)
 
-`wordsOfType(type, maxRank?)` lists the dictionary's words by grammar symbol (noun, verb, adjective, adverb,
-preposition...), A to Z, using the same `jobsOfWord()` logic that reads every sentence; `pluralOf`, `ingOf` and
-`verbForms` write word forms. `MASTER_FORMULAS` is her master formula list ("All Formulas", imported by
-`scripts/import-master-list.py`), `FORMULA_LIST` reads it, and `MASTER_CARDS` is every master-list formula as a card
-(with her printed card picture when there is one). Every program (Literacy Manipulatives, the independent work
-dashboard) reads formulas and word types from here.
+Her rule (2026-11-18): "The engine for the kids' dashboard should be completely different than the literacy
+manipulatives app. The only thing that should be shared between them is the symbolic grammar engine, because that is a
+curriculum that I'm building that will fuel both of the programs."
+
+So this engine holds the curriculum only:
+- her grammar symbols and tense symbols (`GRAMMAR_SYMBOL_INFO`, `TENSE_SYMBOLS`) and her symbol sentence deck;
+- her master formula list and formula codes (`MASTER_FORMULAS`, `FORMULA_LIST`, `formulaCode`, `sentenceSlots`);
+- the rules for reading a word's job in a sentence (`readText`, `jobsOfWord`, `jobsDetail`, RULES.md), the word lists
+  those rules need, and her job rules (`JOB_RULES`, `multiJobWords`, `PREPOSITION_LIST`);
+- past, present and future (`tenseVersions`) and the engine checks.
+
+Everything else belongs to the program that uses it and is never shared: games, screens, dictionaries and thesauruses,
+pictures, word books, saved words, card pictures and word forms for a video. 1.4.0 moved the Literacy Manipulatives
+parts out (Story Maker's `wordsOfType`/`pluralOf`/`ingOf`/`verbForms`, the formula card pictures `MASTER_CARDS`, and
+the student's "My dictionary"). An app can hand the engine its own words with `configureEngine({ ownWord })`.

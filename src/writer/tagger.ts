@@ -1,6 +1,6 @@
 import { wordJobs, type PatternWord } from '../sentenceSearch';
 import type { SymbolWordClass } from '../grammarSymbols';
-import { myWordClass } from './myWords';
+import { ownWordClass as myWordClass } from '../config';
 import { dictionaryJobs, isWord, suggestFor, wordRank, wordsReady } from './spell';
 
 // Write mode's symbols (her notes 2026-10-28: "make sure you are referencing the word itself, and its placement

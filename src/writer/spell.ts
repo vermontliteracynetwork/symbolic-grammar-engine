@@ -2,7 +2,7 @@ import { loadJson } from '../config';
 import { setSharedCorrections, type Correction } from './corrections';
 import { wordJobs } from '../sentenceSearch';
 import type { SymbolWordClass } from '../grammarSymbols';
-import { myWordClass } from './myWords';
+import { ownWordClass as myWordClass } from '../config';
 import { isDictionaryWord, typesOf } from '../wordTypes';
 
 // The Writer's spelling help (teacher, 2026-10-27): a dictionary of about 42,000 common English words
