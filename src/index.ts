@@ -11,6 +11,8 @@ export { GRAMMAR_SYMBOL_INFO, TENSE_SYMBOLS, type SymbolWordClass, type WordClas
 export { formulaCode, sentenceSlots, cardSlotsOf, closestFormula, formulasLike, slotDistance, slotLabel, slotClass, type Slot } from './writer/formulaMatch';
 export { FORMULA_LIST, type ListedFormula } from './writer/formulaList';
 export { MASTER_FORMULAS, type MasterFormula } from './writer/masterList';
+export { LESSON_BREAKDOWN, type BreakdownUnit, type BreakdownLesson, type BreakdownSkill, type BreakdownFormula } from './writer/lessonBreakdown';
+export { BREAKDOWN_FORMULAS, formulaPartsOf, type ListedBreakdownFormula } from './writer/breakdownFormulas';
 export { multiJobWords, JOB_RULES, jobRuleFor, PREPOSITION_LIST, type MultiJobWord, type JobRule } from './jobRules';
 export { SENTENCE_FORMULAS, type SentenceFormula } from './writer/formulas';
 export { splitSentences, checkSentence, tagForCheck, tagEngine, type SentenceSpan, type CheckResult } from './writer/sentenceCheck';

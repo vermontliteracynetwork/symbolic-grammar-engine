@@ -50,6 +50,7 @@ A teacher's fixes from Formula Search ("Send my fixes to the engine") are added 
 Every project pins the same engine commit. To update a project: change the commit in its package.json, run
 `npm install`, and its build runs the engine checks.
 
+- **1.5.0** (2026-11-19): her Lesson Breakdown, Units 1-8 and Compositions (the most current version): `LESSON_BREAKDOWN` (units, lessons, skills and the formula set for each skill), `BREAKDOWN_FORMULAS` (every one, in order) and `formulaPartsOf(code, example)`. Imported by `scripts/import-lesson-breakdown.py` from `data/source/Symbolic_Grammar_Lesson_Breakdown.pdf`.
 - **1.4.0** (2026-11-18): curriculum only (see What belongs here). `dictionary.ts` is now `jobRules.ts`; Literacy
   Manipulatives' word lists, card pictures and My dictionary moved into that app; `configureEngine({ ownWord })`. Same rules and results.
 - **1.2.0** (2026-11-13): `configureEngine({ liveLookups })` (the dashboard keeps its live dictionary lookups), `rememberTypes` and

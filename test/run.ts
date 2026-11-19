@@ -4,6 +4,8 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { BREAKDOWN_FORMULAS } from '../src/writer/breakdownFormulas';
+import { formulaCode, sentenceSlots } from '../src/writer/formulaMatch';
 import { configureEngine, loadEngine, checkEngine, sharedCorrections, tagEngine, tagForCheck as tagFixed, multiJobWords, JOB_RULES, readText } from '../src/index';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -33,6 +35,8 @@ for (const c of fixes) {
   else { failed++; console.log(`  WRONG  shared fix "${c.word}" in "${c.sentence}" should be ${c.to}`); }
 }
 console.log(`Shared fixes: ${fixesOk} of ${fixes.length} hold.`);
+// Her Lesson Breakdown: every formula's example, coded the engine's way, against her code (shown, not failed).
+{ let same = 0; for (const f of BREAKDOWN_FORMULAS) { try { const words = tagFixed(f.example); if (formulaCode(sentenceSlots(words, f.example), f.example) === f.code) same++; } catch { /* skip */ } } console.log(`Lesson Breakdown: ${BREAKDOWN_FORMULAS.length} formulas, ${same} coded the same way by the engine.`); }
 console.log(`Words with more than one job: ${multiJobWords().length}.`);
 // Every example in the job rules must read the way its rule says: the same word, two different jobs.
 let rulesOk = 0;
