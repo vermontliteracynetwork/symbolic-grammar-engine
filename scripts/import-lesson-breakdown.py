@@ -1,5 +1,5 @@
 """Her Lesson Breakdown (Units 1-8 and Compositions, PDF) -> src/writer/lessonBreakdown.ts.
-Run: python3 scripts/import-lesson-breakdown.py data/source/Symbolic_Grammar_Lesson_Breakdown.pdf"""
+Run: python3 scripts/import-lesson-breakdown.py docs/source/Symbolic_Grammar_Lesson_Breakdown.pdf"""
 import json, re, sys
 import pdfplumber
 
