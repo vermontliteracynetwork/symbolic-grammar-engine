@@ -169,3 +169,24 @@ Every word on her Prepositional Phrases list is a preposition in the engine (ami
 throughout and underneath were added), and `PREPOSITION_LIST` keeps her whole list, word groups included (according
 to, because of, in spite of, instead of, on account of, out of). Her rule stands: a word from the list with no object
 after it is not working as a preposition.
+
+## 1.6.0: word forms (no -ed added where it does not belong)
+
+Her rule (2026-11-19): "the main Symbolic Grammar Engine needs to fuel all literacy manipulatives tools/apps. the
+dictionary/word explorer needs to improve so we dont have past tense verbs with ed added arbitrarily."
+
+Every program makes a word's forms with the engine (`src/writer/wordForms.ts`), never on its own:
+- **Irregular verbs** come from her table of about 190 (run: ran, run; eat: ate, eaten; teach: taught; sting: stung).
+  A verb made from one with re-, un-, over-, under-, out-, mis-, fore-, with-, up- or be- keeps its forms (rewrite:
+  rewrote, rewritten; undo: undid, undone; become: became). behave, relay and befit are not made that way.
+- **Regular verbs** add -ed with the spelling rules: a silent e takes -d (hope: hoped); a consonant and y becomes -ied
+  (cry: cried); a short word with one vowel and one consonant doubles it (hop: hopped, quiz: quizzed; never w, x or y:
+  snowed, fixed, played); a longer word doubles only when the beat is on the end (admit: admitted, prefer: preferred,
+  but visit: visited, open: opened, travel: traveled); -ic adds k (panic: panicked).
+- **-ing** follows the same rules (hopping, hoping, tying, seeing); **he, she, it** adds -s or -es (goes, fixes, cries).
+- **The plain form** (`baseOf`) only comes from a real verb's form: jumped is jump, ran is run, eaten is eat, but need,
+  weed and seed are their own verbs, and bed and red are not verbs' forms.
+- **Plurals** (child: children, leaf: leaves, tomato: tomatoes, snowman: snowmen) and **more and most** (big: bigger,
+  biggest; good: better, best; careful: more careful) work the same way.
+
+`npm test` checks 350 word forms and fails if any is wrong.

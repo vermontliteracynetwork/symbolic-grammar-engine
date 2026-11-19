@@ -4,6 +4,7 @@ import { wordJobs } from '../sentenceSearch';
 import type { SymbolWordClass } from '../grammarSymbols';
 import { ownWordClass as myWordClass } from '../config';
 import { isDictionaryWord, typesOf } from '../wordTypes';
+import { isIrregularPast } from './wordForms';
 
 // The Writer's spelling help (teacher, 2026-10-27): a dictionary of about 42,000 common English words
 // (SCOWL lists, public/writer/words.json, ranked 0 = most common to 3 = less common), loaded only when the
@@ -147,8 +148,7 @@ function editDistance(a: string, b: string): number {
 // After will / can / to / don't the action is in its base form (catch, not caught or catches).
 const BEFORE_BASE = new Set(['will', 'would', 'can', 'could', 'should', 'must', 'may', 'might', 'shall', 'do', 'does', 'did', "don't", "doesn't", "didn't", "can't", "won't", "let's", 'please']);
 const BEFORE_VERB = new Set(['i', 'you', 'we', 'they', 'he', 'she', 'it']);
-const IRREGULAR_PAST = new Set(['was', 'were', 'had', 'did', 'went', 'came', 'saw', 'got', 'made', 'took', 'gave', 'said', 'told', 'knew', 'thought', 'felt', 'ran', 'ate', 'drank', 'slept', 'sat', 'stood', 'swam', 'flew', 'wrote', 'drew', 'sang', 'rode', 'threw', 'caught', 'found', 'kept', 'built', 'brought', 'bought', 'sold', 'wore', 'held', 'hid', 'fell', 'grew', 'taught', 'won', 'lost', 'left', 'met', 'paid', 'sent', 'spent', 'woke', 'dug', 'fought', 'sank', 'shone', 'spun', 'swung', 'began', 'broke', 'chose', 'drove', 'forgot', 'heard', 'meant', 'spoke', 'stole', 'understood']);
-const isBaseForm = (w: string) => !/(ed|ing)$/.test(w) && !IRREGULAR_PAST.has(w) && !(/[^s]s$/.test(w) && wordJobs(w.slice(0, -1)).has('verb'));
+const isBaseForm = (w: string) => !/(ed|ing)$/.test(w) && !isIrregularPast(w) && !(/[^s]s$/.test(w) && wordJobs(w.slice(0, -1)).has('verb'));
 const BEFORE_NOUN = new Set(['a', 'an', 'the', 'my', 'your', 'his', 'her', 'our', 'their', 'this', 'that', 'these', 'those', 'some', 'every', 'each', 'many', 'its']);
 // After "to": a base verb is likeliest ("to play"), but "to the park" and "to town" are right too.
 export type Slot = 'base' | 'to' | 'verb' | 'noun' | null;

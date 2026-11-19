@@ -19,6 +19,7 @@ export { splitSentences, checkSentence, tagForCheck, tagEngine, type SentenceSpa
 export { addCorrection, removeCorrection, corrections, sharedCorrections, setSharedCorrections, accuracy, type Correction } from './writer/corrections';
 export { checkEngine, TO_TEACH, type EngineCheck } from './writer/engineCheck';
 export { TAG_TESTS, type TagTest } from './writer/engineTests';
-export { tenseVersions, pastOf, baseOf, third } from './writer/tenses';
+export { tenseVersions } from './writer/tenses';
+export { pastOf, pastParticipleOf, ingOf, third, baseOf, pluralOf, comparisonOf, irregularVerb, isIrregularPast, IRREGULAR_VERBS } from './writer/wordForms';
 export { wordsRanked } from './writer/spell';
 export { lookUpWords, onWordTypes, liveLookupsAllowed, rememberTypes, typeOfPart, loadWordTypes } from './wordTypes';

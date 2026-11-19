@@ -50,6 +50,7 @@ A teacher's fixes from Formula Search ("Send my fixes to the engine") are added 
 Every project pins the same engine commit. To update a project: change the commit in its package.json, run
 `npm install`, and its build runs the engine checks.
 
+- **1.6.0** (2026-11-19): word forms for every program (`src/writer/wordForms.ts`): `pastOf`, `pastParticipleOf`, `ingOf`, `third`, `baseOf`, `pluralOf`, `comparisonOf`, `irregularVerb`, `isIrregularPast`, `IRREGULAR_VERBS`. About 190 irregular verbs (and their re-, un-, over-, under-, out-, mis-, fore-, with-, up- and be- forms: rewrote, undid, became) instead of about 120, so no verb gets -ed it does not take; regular spelling rules (hopped, cried, panicked, admitted, visited, traveled). `npm test` checks 350 word forms. Same sentence rules and results.
 - **1.5.0** (2026-11-19): her Lesson Breakdown, Units 1-8 and Compositions (the most current version): `LESSON_BREAKDOWN` (units, lessons, skills and the formula set for each skill), `BREAKDOWN_FORMULAS` (every one, in order) and `formulaPartsOf(code, example)`. Imported by `scripts/import-lesson-breakdown.py` from `docs/source/Symbolic_Grammar_Lesson_Breakdown.pdf`.
 - **1.4.0** (2026-11-18): curriculum only (see What belongs here). `dictionary.ts` is now `jobRules.ts`; Literacy
   Manipulatives' word lists, card pictures and My dictionary moved into that app; `configureEngine({ ownWord })`. Same rules and results.
@@ -71,7 +72,7 @@ So this engine holds the curriculum only:
 - her master formula list and formula codes (`MASTER_FORMULAS`, `FORMULA_LIST`, `formulaCode`, `sentenceSlots`);
 - the rules for reading a word's job in a sentence (`readText`, `jobsOfWord`, `jobsDetail`, RULES.md), the word lists
   those rules need, and her job rules (`JOB_RULES`, `multiJobWords`, `PREPOSITION_LIST`);
-- past, present and future (`tenseVersions`) and the engine checks.
+- past, present and future (`tenseVersions`), every word's forms (past, -ing, plural, more and most: `pastOf`, `ingOf`, `pluralOf`...) and the engine checks.
 
 Everything else belongs to the program that uses it and is never shared: games, screens, dictionaries and thesauruses,
 pictures, word books, saved words, card pictures and word forms for a video. 1.4.0 moved the Literacy Manipulatives

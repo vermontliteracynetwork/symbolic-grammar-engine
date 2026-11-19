@@ -6,6 +6,7 @@ import { baseOf } from './tenses';
 import type { SymbolWordClass } from '../grammarSymbols';
 import type { SentenceFormula } from './formulas';
 import { cardSlotsOf, closestFormula, formulaCode, sentenceSlots } from './formulaMatch';
+import { isIrregularPast } from './wordForms';
 
 // The Writer's grammar check is her Sentence Check (Symbolic Grammar Program Overview, principle 9): every
 // sentence, every time, five things: complete (a Who part and an Action), capital at the start (and on names
@@ -43,7 +44,6 @@ export const CODE: Record<SymbolWordClass, string> = {
   preposition: 'Pr', conjunction: 'C', interjection: 'I',
 } as Record<SymbolWordClass, string>;
 
-const IRREGULAR_PAST = new Set(['was', 'were', 'had', 'did', 'went', 'came', 'saw', 'got', 'made', 'took', 'gave', 'said', 'told', 'knew', 'thought', 'felt', 'ran', 'ate', 'drank', 'slept', 'sat', 'stood', 'swam', 'flew', 'wrote', 'drew', 'sang', 'rode', 'threw', 'caught', 'found', 'kept', 'built', 'brought', 'bought', 'sold', 'wore', 'held', 'hid', 'fell', 'grew', 'taught', 'won', 'lost', 'left', 'met', 'paid', 'sent', 'spent', 'woke', 'dug', 'fought', 'began', 'broke', 'chose', 'drove', 'forgot', 'heard', 'spoke', 'stole']);
 const HELPERS = new Set(['will', 'would', 'can', 'could', 'should', 'must', 'may', 'might', 'shall', 'to', 'do', 'does', 'did', "don't", "doesn't", "didn't", "can't", "won't"]);
 const BE = new Set(['am', 'is', 'are', 'was', 'were', 'be', 'been', 'being']);
 const QUESTION_START = new Set(['is', 'are', 'am', 'was', 'were', 'do', 'does', 'did', 'can', 'could', 'will', 'would', 'should', 'have', 'has', 'who', 'what', 'where', 'when', 'why', 'how', 'which']);
@@ -146,7 +146,7 @@ export function checkSentence(s: SentenceSpan): CheckResult {
   const firstVerbAt = firstVerb < 0 ? words.findIndex((_, i) => does(i, isVerb)) : firstVerb;
   const question = /\?["'”’)]*$/.test(s.text) || QUESTION_START.has(lower[0] ?? '');
   // A command starts with a verb in its base form ("Close the door."); "Named Rob." is not a command.
-  const baseVerb = (i: number) => i >= 0 && (!/(ed|ing)$/.test(lower[i]) || BASE_ED_ING.has(lower[i])) && !IRREGULAR_PAST.has(lower[i]) && !(/[^s]s$/.test(lower[i]) && !words[i].parts);
+  const baseVerb = (i: number) => i >= 0 && (!/(ed|ing)$/.test(lower[i]) || BASE_ED_ING.has(lower[i])) && !isIrregularPast(lower[i]) && !(/[^s]s$/.test(lower[i]) && !words[i].parts);
   // Before a command's verb there can only be "please", a how word or a name and a comma ("First, wash...",
   // "Sam, close the door.").
   const openers = firstVerb >= 0 && words.slice(0, firstVerb).every((w, i) => w.wordClass === 'interjection' || w.wordClass === 'adverb' || lower[i] === 'please' || w.wordClass === 'propernoun');
@@ -179,7 +179,7 @@ export function checkSentence(s: SentenceSpan): CheckResult {
     const before = lower[i - 1] ?? '';
     if (HELPERS.has(before) || (BE.has(before) && /ing$/.test(lw))) return;
     if (lw === 'will' || lw === "won't") { times.add('future'); return; }
-    if (lw === 'did' || lw === "didn't" || IRREGULAR_PAST.has(lw) || /ed$/.test(lw)) times.add('past');
+    if (lw === 'did' || lw === "didn't" || isIrregularPast(lw) || /ed$/.test(lw)) times.add('past');
     else if (!/ing$/.test(lw)) times.add('present');
   });
   const time = !(times.has('past') && times.has('present'));

@@ -1,60 +1,15 @@
 import { tagInContext } from './tagger';
-import { isWord } from './spell';
+import { baseOf, pastOf, third } from './wordForms';
 
 // Past, present and future versions of a model sentence (her request 2026-10-28), for the Sentence Formulas
 // reference: "The frog jumps." / "The frog jumped." / "The frog will jump." Built from the sentence's own verbs
 // and subjects; a sentence whose verbs can't be changed safely (commands, "can", "should") shows no versions.
 
-const IRREGULAR: Record<string, string> = {
-  be: 'was', have: 'had', do: 'did', go: 'went', come: 'came', see: 'saw', get: 'got', make: 'made', take: 'took', give: 'gave',
-  say: 'said', tell: 'told', know: 'knew', think: 'thought', feel: 'felt', run: 'ran', eat: 'ate', drink: 'drank', sleep: 'slept',
-  sit: 'sat', stand: 'stood', swim: 'swam', fly: 'flew', write: 'wrote', draw: 'drew', sing: 'sang', ride: 'rode', throw: 'threw',
-  catch: 'caught', find: 'found', keep: 'kept', build: 'built', bring: 'brought', buy: 'bought', sell: 'sold', wear: 'wore',
-  hold: 'held', hide: 'hid', fall: 'fell', grow: 'grew', teach: 'taught', win: 'won', lose: 'lost', leave: 'left', meet: 'met',
-  pay: 'paid', send: 'sent', spend: 'spent', wake: 'woke', dig: 'dug', fight: 'fought', begin: 'began', break: 'broke',
-  choose: 'chose', drive: 'drove', forget: 'forgot', hear: 'heard', speak: 'spoke', steal: 'stole', lay: 'laid', lie: 'lay',
-  lead: 'led', read: 'read', put: 'put', cut: 'cut', hit: 'hit', hurt: 'hurt', let: 'let', set: 'set', shut: 'shut', cost: 'cost',
-  bite: 'bit', blow: 'blew', feed: 'fed', freeze: 'froze', hang: 'hung', shake: 'shook', shine: 'shone', shoot: 'shot',
-  sink: 'sank', slide: 'slid', spin: 'spun', stick: 'stuck', sting: 'stung', strike: 'struck', swing: 'swung', tear: 'tore',
-  understand: 'understood', weep: 'wept', wind: 'wound', bend: 'bent', light: 'lit', ring: 'rang', rise: 'rose', seek: 'sought',
-  sweep: 'swept', lend: 'lent', mean: 'meant', bleed: 'bled', creep: 'crept', flee: 'fled', kneel: 'knelt', quit: 'quit',
-};
-const PAST_TO_BASE = Object.fromEntries(Object.entries(IRREGULAR).map(([b, p]) => [p, b]));
 const HELPERS = new Set(['can', 'could', 'should', 'must', 'may', 'might', 'shall', 'would']);
 const SINGULAR_PRONOUNS = new Set(['he', 'she', 'it', 'this', 'that', 'someone', 'somebody', 'everyone', 'everybody', 'nobody', 'anyone', 'each', 'who', 'what']);
 
 type Number = 'one' | 'many' | 'i';
 const POSSESSIVES = new Set(['my', 'your', 'his', 'her', 'its', 'our', 'their']);
-export const third = (b: string) => (b === 'have' ? 'has' : b === 'do' ? 'does' : b === 'go' ? 'goes' : b === 'be' ? 'is'
-  : /[^aeiou]y$/.test(b) ? `${b.slice(0, -1)}ies` : /(s|sh|ch|x|z|o)$/.test(b) ? `${b}es` : `${b}s`);
-export function pastOf(b: string): string {
-  if (IRREGULAR[b]) return IRREGULAR[b];
-  if (/e$/.test(b)) return `${b}d`;
-  if (/[^aeiou]y$/.test(b)) return `${b.slice(0, -1)}ied`;
-  if (/^[^aeiou]*[aeiou][bdgmnprt]$/.test(b) && b.length <= 4) return `${b}${b.slice(-1)}ed`;
-  return `${b}ed`;
-}
-const known = (w: string) => isWord(w);
-export function baseOf(v: string): string {
-  const w = v.toLowerCase();
-  if (['is', 'are', 'am', 'was', 'were', 'be', 'been'].includes(w)) return 'be';
-  if (w === 'has' || w === 'had') return 'have';
-  if (w === 'does' || w === 'did') return 'do';
-  if (PAST_TO_BASE[w]) return PAST_TO_BASE[w];
-  if (IRREGULAR[w]) return w;
-  if (/ied$/.test(w)) return `${w.slice(0, -3)}y`;
-  if (/ed$/.test(w)) {
-    const stem = w.slice(0, -2);
-    if (/([bdgmnprt])\1$/.test(stem) && known(stem.slice(0, -1))) return stem.slice(0, -1);
-    if (known(`${stem}e`) && !known(stem)) return `${stem}e`;
-    if (/[^aeiou]e?$/.test(stem) && known(stem)) return stem;
-    return known(`${w.slice(0, -1)}`) ? w.slice(0, -1) : stem;
-  }
-  if (/ies$/.test(w)) return `${w.slice(0, -3)}y`;
-  if (/(ss|sh|ch|x|z|o)es$/.test(w)) return w.slice(0, -2);
-  if (/[^s]s$/.test(w)) return w.slice(0, -1);
-  return w;
-}
 const be = (n: Number, tense: 'present' | 'past') => (tense === 'past' ? (n === 'many' ? 'were' : 'was') : n === 'i' ? 'am' : n === 'one' ? 'is' : 'are');
 const doForm = (n: Number, tense: 'present' | 'past') => (tense === 'past' ? 'did' : n === 'one' ? 'does' : 'do');
 
@@ -66,6 +21,7 @@ function numberOf(word: string, cls: string): Number | null {
   if (cls === 'noun') return /[^s]s$/.test(w) && !/(ss|us|is)$/.test(w) ? 'many' : 'one';
   return null;
 }
+export { baseOf, pastOf, third };
 const keepCase = (from: string, to: string) => (/^[A-Z]/.test(from) ? to.charAt(0).toUpperCase() + to.slice(1) : to);
 
 export interface Versions { past: string; present: string; future: string }

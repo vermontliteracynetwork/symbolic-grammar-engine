@@ -8,6 +8,7 @@ import {
 } from './grammarSymbols';
 import { SANDBOX_VERBS } from './grammarContent';
 import { ALL_SYMBOL_SENTENCES, type SymbolSentence } from './symbolSentences';
+import { isIrregularPast, third } from './writer/wordForms';
 
 export interface PatternWord { wordClass: SymbolWordClass; word: string }
 
@@ -108,9 +109,8 @@ const BASE_VERBS = new Set(VERB_BASES.split(/\s+/));
 // "They runs" becomes "They run". Past-tense verbs fit any subject; forms of "be" follow the subject too.
 const SINGULAR_PRONOUNS = new Set(['he', 'she', 'it', 'this', 'that', 'someone', 'somebody', 'everyone', 'everybody', 'nobody', 'anyone', 'each']);
 const PLURAL_PRONOUNS = new Set(['we', 'they', 'you', 'these', 'those', 'i']);
-const isPastForm = (v: string) => /ed$/.test(v) || (NO_ENDINGS.has(v) && !['be', 'am', 'is', 'are', 'has', 'does'].includes(v));
-const thirdPerson = (base: string) => (base === 'have' ? 'has' : base === 'do' ? 'does' : base === 'go' ? 'goes'
-  : base.endsWith('y') && !/[aeiou]y$/.test(base) ? `${base.slice(0, -1)}ies` : /(s|sh|ch|x|z|o)$/.test(base) ? `${base}es` : `${base}s`);
+const isPastForm = (v: string) => /ed$/.test(v) || isIrregularPast(v) || (NO_ENDINGS.has(v) && !['be', 'am', 'is', 'are', 'has', 'does'].includes(v));
+const thirdPerson = third;
 function baseOf(v: string): string | null {
   if (BASE_VERBS.has(v)) return v;
   for (const b of [v.replace(/ies$/, 'y'), v.replace(/es$/, ''), v.replace(/s$/, '')]) if (b !== v && BASE_VERBS.has(b)) return b;
