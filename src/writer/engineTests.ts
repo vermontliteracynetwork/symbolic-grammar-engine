@@ -90,6 +90,10 @@ const RAW: [string, string][] = [
   ['The farmer plants seeds.', 'A N V N'],
   ['Mia waters the garden.', 'PN V A N'],
   ['The water spilled.', 'A N V'],
+  // Prepositions (1.8.0, her note 2026-11-20 "prepositions really need to be worked on"): a preposition with its
+  // object after a describing word; because of.
+  ['The shell has bands of very strong tissue.', 'A N V N R B J N'],
+  ['We stayed inside because of the rain.', 'P V B R R A N'],
 ];
 
 export interface TagTest { sentence: string; expect: SymbolWordClass[] }

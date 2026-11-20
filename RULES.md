@@ -208,3 +208,16 @@ noted if they are incomplete sentences on their own."
 - Only complete sentences count (a subject and a verb, or a command, including "Please ..."): Germs! and Only a fish. are left out.
 
 `npm test` checks a passage with each case.
+
+## 1.8.0: prepositions
+
+Her note (2026-11-20): "Prepositions really need to be worked on because that's something that's not working well in the engine."
+- A word on her prepositions list is a preposition whenever its object follows, even when a describing word, an -ing
+  word, a question word or another preposition comes first: bands of very strong tissue, without noticing, about how
+  important it was, from off the ground, at what she had done.
+- because of and instead of are one preposition (her list's word groups).
+- Still open (her D-25, prepositions can stand alone): her formula list codes "We stayed in because it rained." as
+  (S1.P.B)C[S1.P] and the card "Sit down." reads down as telling where, so a preposition on its own at the end of a
+  clause still reads as an adverb until she decides which rule wins.
+- Measured against 2,039 hand-checked sentences (Literacy Manipulatives' formula research): the engine found 89.7% of
+  the prepositions before and 94.8% after; 98.5% of the words it calls prepositions are right.

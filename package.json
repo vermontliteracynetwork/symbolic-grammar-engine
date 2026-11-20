@@ -1,6 +1,6 @@
 {
   "name": "symbolic-grammar-engine",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Her Symbolic Grammar curriculum as code: grammar symbols, sentence formulas, formula codes and the rules for reading a word's job. The only thing her programs share.",
   "type": "module",
   "private": true,

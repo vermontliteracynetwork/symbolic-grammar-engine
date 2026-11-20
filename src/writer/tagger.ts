@@ -102,6 +102,8 @@ const nounAhead = (t?: Tok): boolean => {
   if (t.jobs.has('adjective')) return nounAhead(t.next);
   return false;
 };
+// Her Prepositional Phrases list (one-word entries), src/jobRules.ts PREPOSITION_LIST.
+const HER_PREPOSITIONS = new Set(['about', 'above', 'across', 'after', 'against', 'along', 'amid', 'among', 'around', 'at', 'atop', 'before', 'below', 'beneath', 'beside', 'between', 'beyond', 'by', 'concerning', 'down', 'during', 'except', 'for', 'from', 'in', 'inside', 'into', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'regarding', 'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without']);
 const startsNounPhrase = (t?: Tok) => !!t && (ARTICLE.has(t.lower) || POSSESSIVE.has(t.lower) || OBJECT.has(t.lower) || SUBJECT.has(t.lower) || DETERMINER.has(t.lower) || NUMBER.test(t.lower) || /^[A-Z]/.test(t.word) || nounAhead(t) || (t.dict[0] === 'noun' && !t.next?.jobs.has('noun')));
 
 export interface TaggedWord extends PatternWord { parts?: C[]; unsure?: boolean }
@@ -200,6 +202,8 @@ export function tagInContext(text: string): TaggedWord[] {
     }
     if (w === 'so' && next?.lower === 'that') { pick('conjunction'); verbInClause = false; continue; }
     if (w === 'so') { pick(next && (next.jobs.has('adjective') || next.jobs.has('adverb') || ADVERB.has(next.lower)) && !SUBJECT.has(next.lower) ? 'adverb' : 'conjunction'); continue; }
+    // "because of the rain", "instead of my name": one preposition (her list's word groups).
+    if ((w === 'because' || w === 'instead') && next?.lower === 'of') { pick('preposition'); continue; }
     if (CONJUNCTION.has(w)) { pick('conjunction'); if (w !== 'and' && w !== 'or') verbInClause = false; continue; }
     if (SUBORDINATE_OR_PREP.has(w)) {
       if (next && (SUBJECT.has(next.lower) || clauseAhead(next))) { pick('conjunction'); verbInClause = false; }
@@ -213,7 +217,14 @@ export function tagInContext(text: string): TaggedWord[] {
     }
     if (w === 'to') { pick('preposition'); continue; }
     if (w === 'according' && next?.lower === 'to') { pick('preposition'); continue; }
-    // "up", "out", "outside" with no noun after them tell where: an adverb.
+    // A word on her prepositions list with its object after it is a preposition, even when a describing word, an
+    // -ing word, a question word or another preposition comes first: "of very strong tissue", "about how important",
+    // "without noticing", "from off the ground", "at what she had done". On its own at the end of a clause ("We stayed
+    // in.", "Sit down.") her formula list still reads it as telling where (B); see her D-25 question.
+    const objectAfter = !!next && !/[,.;:!?]/.test(t.gapAfter ?? '') && (startsNounPhrase(next) || /ing$/.test(next.lower)
+      || WH_PRONOUN.has(next.lower) || WH_ADVERB.has(next.lower) || HER_PREPOSITIONS.has(next.lower) || next.lower === 'very'
+      || (next.jobs.has('adjective') && !next.jobs.has('verb') && !!next.next && !CLOSED(next.next.lower)) || (!next.dict.length && !CLOSED(next.lower)));
+    if (HER_PREPOSITIONS.has(w) && w !== 'inside' && w !== 'outside' && objectAfter) { pick('preposition'); continue; }
     if (PREPOSITION.has(w)) { pick(startsNounPhrase(next) ? 'preposition' : 'adverb'); continue; }
     if (FLEX.has(w) && (t.clauseStart || t.afterComma || prevWord === 'please') && next && (ARTICLE.has(next.lower) || POSSESSIVE.has(next.lower))) { pick('verb'); continue; }
     if (FLEX.has(w)) { pick(prev === 'article' || prev === 'adjective' || nounAhead(next) ? 'adjective' : prev === 'verb' && !BE.has(prevWord) && !LINKING.has(prevWord) ? 'adverb' : 'adjective'); continue; }
