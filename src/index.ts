@@ -15,7 +15,7 @@ export { LESSON_BREAKDOWN, type BreakdownUnit, type BreakdownLesson, type Breakd
 export { BREAKDOWN_FORMULAS, formulaPartsOf, type ListedBreakdownFormula } from './writer/breakdownFormulas';
 export { multiJobWords, JOB_RULES, jobRuleFor, PREPOSITION_LIST, type MultiJobWord, type JobRule } from './jobRules';
 export { SENTENCE_FORMULAS, type SentenceFormula } from './writer/formulas';
-export { splitSentences, checkSentence, tagForCheck, tagEngine, type SentenceSpan, type CheckResult } from './writer/sentenceCheck';
+export { splitSentences, formulaSentences, checkSentence, tagForCheck, tagEngine, type SentenceSpan, type CheckResult } from './writer/sentenceCheck';
 export { addCorrection, removeCorrection, corrections, sharedCorrections, setSharedCorrections, accuracy, type Correction } from './writer/corrections';
 export { checkEngine, TO_TEACH, type EngineCheck } from './writer/engineCheck';
 export { TAG_TESTS, type TagTest } from './writer/engineTests';

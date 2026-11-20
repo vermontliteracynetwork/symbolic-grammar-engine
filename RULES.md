@@ -190,3 +190,17 @@ Every program makes a word's forms with the engine (`src/writer/wordForms.ts`), 
   biggest; good: better, best; careful: more careful) work the same way.
 
 `npm test` checks 350 word forms and fails if any is wrong.
+
+## 1.7.0: sentences for formula research
+
+Her rule (2026-11-20): "that is just a speech tag and should never be noted as its own formula. formulas should never be
+noted if they are incomplete sentences on their own."
+
+`formulaSentences(text)` gives the sentences a passage's formulas are counted from:
+- What someone says is its own sentence: "Do you feel better now?" asked Quentin. gives Do you feel better now?
+  A closing comma inside the quote ends it: "Wait and see," said Mother. gives Wait and see.
+- The speech tag (asked Quentin., she said, Farmer Fred said.) is never a sentence of its own.
+- A quote that is part of the sentence stays in it: The word fossil means "dug up."
+- Only complete sentences count (a subject and a verb, or a command): Germs! and Only a fish. are left out.
+
+`npm test` checks a passage with each case.

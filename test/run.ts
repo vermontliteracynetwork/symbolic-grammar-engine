@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { BREAKDOWN_FORMULAS } from '../src/writer/breakdownFormulas';
 import { formulaCode, sentenceSlots } from '../src/writer/formulaMatch';
+import { formulaSentences } from '../src/writer/sentenceCheck';
 import { pastOf, pastParticipleOf, ingOf, third, baseOf, pluralOf, comparisonOf } from '../src/writer/wordForms';
 import { configureEngine, loadEngine, checkEngine, sharedCorrections, tagEngine, tagForCheck as tagFixed, multiJobWords, JOB_RULES, readText } from '../src/index';
 
@@ -68,6 +69,15 @@ console.log(`Words with more than one job: ${multiJobWords().length}.`);
   for (const [n, pl] of [['dog', 'dogs'], ['box', 'boxes'], ['baby', 'babies'], ['child', 'children'], ['mouse', 'mice'], ['leaf', 'leaves'], ['knife', 'knives'], ['tomato', 'tomatoes'], ['sheep', 'sheep'], ['snowman', 'snowmen'], ['toy', 'toys']]) same(`plural of ${n}`, pluralOf(n), pl);
   for (const [a, m, mo] of [['big', 'bigger', 'biggest'], ['happy', 'happier', 'happiest'], ['nice', 'nicer', 'nicest'], ['good', 'better', 'best'], ['bad', 'worse', 'worst'], ['careful', 'more careful', 'most careful'], ['tall', 'taller', 'tallest']]) { const c = comparisonOf(a); same(`more ${a}`, c.more, m); same(`most ${a}`, c.most, mo); }
   console.log(`Word forms: ${ok} of ${total} right.`);
+}
+// Sentences for formula research (1.7.0, her rule 2026-11-20): a speech tag is never its own sentence, and only
+// complete sentences are counted.
+{
+  const text = `"Do you feel better now?" asked Quentin. Archie frowned. "Wait and see," said Mother. The word fossil means "dug up." Then she said, "Corn has a powder called pollen." "So?" Farmer Fred said. Germs! They called her "The Lady with a Lamp." "I'm fine here," he said. Only a fish. Go digging!`;
+  const want = ['Do you feel better now?', 'Archie frowned.', 'Wait and see.', 'The word fossil means "dug up."', 'Corn has a powder called pollen.', 'They called her "The Lady with a Lamp."', "I'm fine here.", 'Go digging!'];
+  const got = formulaSentences(text).map((s) => s.text);
+  if (JSON.stringify(got) === JSON.stringify(want)) console.log(`Formula research sentences: ${want.length} of ${want.length} right (speech tags and incomplete sentences left out).`);
+  else { failed++; console.log(`  WRONG  formula research sentences:\n         engine: ${JSON.stringify(got)}\n         should: ${JSON.stringify(want)}`); }
 }
 // Every example in the job rules must read the way its rule says: the same word, two different jobs.
 let rulesOk = 0;

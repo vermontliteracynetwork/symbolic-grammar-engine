@@ -253,3 +253,45 @@ export function sentenceIssue(s: SentenceSpan): SentenceIssue {
   }
   return null;
 }
+
+// ---------- sentences for formula research (her rule 2026-11-20) ----------
+// "that is just a speech tag and should never be noted as its own formula. formulas should never be noted if they are
+// incomplete sentences on their own." What someone says is its own sentence ("Do you feel better now?"); the speech
+// tag around it ("asked Quentin.", "she said,") is never a sentence of its own. A quote that is part of a sentence
+// (The word fossil means "dug up.") stays in it. Only complete sentences come back (a subject and a verb, or a command).
+const SPEECH_VERBS = new Set(['said', 'says', 'say', 'asked', 'asks', 'ask', 'cried', 'cries', 'told', 'tells', 'replied', 'replies',
+  'shouted', 'shouts', 'yelled', 'yells', 'whispered', 'whispers', 'answered', 'answers', 'laughed', 'continued',
+  'added', 'exclaimed', 'screamed', 'explained', 'begged', 'sighed', 'muttered', 'announced']);
+const isSpeechTag = (rest: string) => {
+  const ws = rest.toLowerCase().match(/[a-z']+/g) ?? [];
+  return ws.length === 0 || (ws.length <= 8 && ws.some((w) => SPEECH_VERBS.has(w)));
+};
+const asSpan = (t: string): SentenceSpan => ({ start: 0, end: t.length, text: t, ended: /[.!?]["')]*$/.test(t) });
+export function formulaSentences(raw: string): SentenceSpan[] {
+  const text = raw.replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\s+/g, ' ');
+  const out: string[] = [];
+  const quotes: string[] = [];
+  const narration = (text.match(/"/g) ?? []).length % 2 === 0
+    // A quote that ends its own sentence ("Do you feel better now?") ends the sentence around it too.
+    ? text.replace(/"([^"]*)"/g, (_, q: string) => { quotes.push(q); return ` QQ${quotes.length - 1}QQ${/[.!?]\s*$/.test(q) ? '.' : ''} `; })
+    : text;
+  let afterQuote = false;
+  for (const s of splitSentences(narration)) {
+    const marks = [...s.text.matchAll(/QQ(\d+)QQ/g)].map((m) => Number(m[1]));
+    if (!marks.length) {
+      // "asked Quentin." / "Farmer Fred said." right after what was said: the speech tag, not a sentence.
+      if (!(afterQuote && isSpeechTag(s.text))) out.push(s.text);
+      afterQuote = false;
+      continue;
+    }
+    afterQuote = /QQ\d+QQ\.?$/.test(s.text);
+    const rest = s.text.replace(/QQ\d+QQ/g, ' ').replace(/[,.!?;:\s]+/g, ' ').trim();
+    if (isSpeechTag(rest)) {
+      // Spoken words: each of their sentences, with a closing comma read as the end of the sentence.
+      for (const k of marks) for (const q of splitSentences(quotes[k])) out.push(q.text.replace(/,\s*$/, '.'));
+    } else {
+      out.push(s.text.replace(/QQ(\d+)QQ\./g, (m, k: string) => (/[.!?]\s*$/.test(quotes[Number(k)]) ? `QQ${k}QQ` : m)).replace(/\s*QQ(\d+)QQ\s*/g, (m, k: string) => `${m.startsWith(' ') ? ' ' : ''}"${quotes[Number(k)]}"${m.endsWith(' ') ? ' ' : ''}`).replace(/\s+([.,!?;:])/g, '$1').replace(/\s+/g, ' ').trim());
+    }
+  }
+  return out.map((t) => asSpan(t.trim())).filter((s) => s.text && checkSentence(s).complete);
+}
