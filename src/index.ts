@@ -20,6 +20,7 @@ export { addCorrection, removeCorrection, corrections, sharedCorrections, setSha
 export { checkEngine, TO_TEACH, type EngineCheck } from './writer/engineCheck';
 export { TAG_TESTS, type TagTest } from './writer/engineTests';
 export { tenseVersions } from './writer/tenses';
+export { readPassage, formulaFamily, LINE_TYPE_INFO, type LineType, type PassageItem } from './writer/passage';
 export { pastOf, pastParticipleOf, ingOf, third, baseOf, pluralOf, comparisonOf, irregularVerb, isIrregularPast, IRREGULAR_VERBS } from './writer/wordForms';
 export { wordsRanked } from './writer/spell';
 export { lookUpWords, onWordTypes, liveLookupsAllowed, rememberTypes, typeOfPart, loadWordTypes } from './wordTypes';

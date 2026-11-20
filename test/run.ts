@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { BREAKDOWN_FORMULAS } from '../src/writer/breakdownFormulas';
 import { formulaCode, sentenceSlots } from '../src/writer/formulaMatch';
 import { pastOf, pastParticipleOf, ingOf, third, baseOf, pluralOf, comparisonOf } from '../src/writer/wordForms';
+import { readPassage, formulaFamily } from '../src/writer/passage';
 import { configureEngine, loadEngine, checkEngine, sharedCorrections, tagEngine, tagForCheck as tagFixed, multiJobWords, JOB_RULES, readText } from '../src/index';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -77,6 +78,23 @@ for (const r of JOB_RULES) for (const [a, b] of r.examples) {
   if (shared) rulesOk++; else console.log(`  CHECK  job rule "${r.title}": "${a}" / "${b}" do not read as ${r.jobs.join(' and ')}`);
 }
 console.log(`Job rule examples: ${rulesOk} of ${JOB_RULES.reduce((n, r) => n + r.examples.length, 0)} read both ways.`);
+// Passages by structure first (1.7.0, her rule 2026-11-20): every line gets its line type before any formula.
+{
+  const P = 'The Fox and the Crow\nA Fable\nA crow sat in a tree. "What a lovely bird!" said the fox. Gonna sing?\nThe crow opened her beak.\n- cheese\n- a tree\nRetold by Sam Lee';
+  const items = readPassage(P);
+  const types = items.map((i) => i.type).join(', ');
+  const want = 'title, header, sentence, sentence, sentence, sentence, list item, list item, source credit';
+  if (types !== want) { failed++; console.log(`  WRONG  passage line types: ${types}\n         should: ${want}`); }
+  if (!items[3].dialogue) { failed++; console.log('  WRONG  quoted speech not marked as dialogue'); }
+  if (!items[4].informal) { failed++; console.log('  WRONG  "Gonna sing?" not marked as informal speech'); }
+  const fam = formulaFamily('S1.A.J.B').join(' ');
+  if (fam !== 'S S1 S1.A S1.A.J S1.A.J.B') { failed++; console.log(`  WRONG  formula family: ${fam}`); }
+  const joined = formulaFamily('(S1.A)C(S1.A)').join(' ');
+  if (joined !== 'S S1 (S1.A)C(S1.A)') { failed++; console.log(`  WRONG  joined formula family: ${joined}`); }
+  const letter = readPassage('Dear Sam,\nThe bus leaves at 3:15.\nSincerely,\nMia').map((i) => i.type).join(', ');
+  if (letter !== 'greeting, sentence, closing, label') { failed++; console.log(`  WRONG  letter line types: ${letter}`); }
+  console.log(`Passages: ${items.length} lines read by structure first.`);
+}
 void tagEngine;
 if (failed) { console.log(`\n${failed} problem(s). Fix the rule (or the test, if the test is wrong) before merging.`); process.exit(1); }
 console.log('\nAll engine checks passed.');

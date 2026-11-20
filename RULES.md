@@ -190,3 +190,29 @@ Every program makes a word's forms with the engine (`src/writer/wordForms.ts`), 
   biggest; good: better, best; careful: more careful) work the same way.
 
 `npm test` checks 350 word forms and fails if any is wrong.
+
+## 1.7.0: passages by structure first (her rule 2026-11-20)
+
+"Learning is taught as a structure before it is taught as an art." `readPassage(text)` reads a passage line by line and
+gives every line its line type before any formula (`src/writer/passage.ts`):
+
+| Line type | How the engine knows | Formula? |
+|---|---|---|
+| Title | the first line, short, no end mark (or a `#` line) | No |
+| Header | a later short line with no end mark, in Title Case or capitals, with text after it; or a short line ending in a colon | No |
+| List item | starts with a dash, bullet, number or letter and a period or bracket | No |
+| Label or caption | six words or fewer with no end mark (a picture label, a caption phrase) | No |
+| Greeting / Closing | Dear..., Hi...; Sincerely, Love, Thanks... | No |
+| Source credit | By..., Source:, Retold by..., Chapter 3 | No |
+| Sentence | ends like a sentence and has a subject and a verb | Yes |
+| Fragment | ends like a sentence but is missing its subject or its verb | Code kept, not a formula |
+
+Inside sentences:
+- **Dialogue**: words in quotation marks, or a line that starts with a dash. `"What a lovely bird!" said the fox.` is one sentence.
+- **Informal speech** (her term, 2026-11-20): talk written the way people say it (gonna, wanna, y'all, ain't, runnin'). Marked, never scored as wrong.
+
+**Formula family** (`formulaFamily(code)`): a code and every shorter code it grows from (job, core, add-ons), so a long
+sentence also counts toward the short formulas it is built on. `S1.A.J.B` gives S, S1, S1.A, S1.A.J, S1.A.J.B. A code with
+joined parts gives its job, its core and the whole code.
+
+Tested in `npm test` (Passages).
