@@ -73,8 +73,8 @@ console.log(`Words with more than one job: ${multiJobWords().length}.`);
 // Sentences for formula research (1.7.0, her rule 2026-11-20): a speech tag is never its own sentence, and only
 // complete sentences are counted.
 {
-  const text = `"Do you feel better now?" asked Quentin. Archie frowned. "Wait and see," said Mother. The word fossil means "dug up." Then she said, "Corn has a powder called pollen." "So?" Farmer Fred said. Germs! They called her "The Lady with a Lamp." "I'm fine here," he said. Only a fish. Go digging!`;
-  const want = ['Do you feel better now?', 'Archie frowned.', 'Wait and see.', 'The word fossil means "dug up."', 'Corn has a powder called pollen.', 'They called her "The Lady with a Lamp."', "I'm fine here.", 'Go digging!'];
+  const text = `"Do you feel better now?" asked Quentin. Archie frowned. "Wait and see," said Mother. The word fossil means "dug up." Then she said, "Corn has a powder called pollen." "So?" Farmer Fred said. Germs! They called her "The Lady with a Lamp." "I'm fine here," he said. Only a fish. "See?" he shrugged. I called out "Left!" or "Sharp right!" when a turn approached. "Please stay!" the students chanted. Go digging! It is thought that Earth is about 4.5 billion years old.`;
+  const want = ['Do you feel better now?', 'Archie frowned.', 'Wait and see.', 'The word fossil means "dug up."', 'Corn has a powder called pollen.', 'They called her "The Lady with a Lamp."', "I'm fine here.", 'See?', 'I called out "Left!" or "Sharp right!" when a turn approached.', 'Please stay!', 'Go digging!', 'It is thought that Earth is about 4.5 billion years old.'];
   const got = formulaSentences(text).map((s) => s.text);
   if (JSON.stringify(got) === JSON.stringify(want)) console.log(`Formula research sentences: ${want.length} of ${want.length} right (speech tags and incomplete sentences left out).`);
   else { failed++; console.log(`  WRONG  formula research sentences:\n         engine: ${JSON.stringify(got)}\n         should: ${JSON.stringify(want)}`); }

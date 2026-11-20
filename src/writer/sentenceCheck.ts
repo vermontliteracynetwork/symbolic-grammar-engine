@@ -261,19 +261,26 @@ export function sentenceIssue(s: SentenceSpan): SentenceIssue {
 // (The word fossil means "dug up.") stays in it. Only complete sentences come back (a subject and a verb, or a command).
 const SPEECH_VERBS = new Set(['said', 'says', 'say', 'asked', 'asks', 'ask', 'cried', 'cries', 'told', 'tells', 'replied', 'replies',
   'shouted', 'shouts', 'yelled', 'yells', 'whispered', 'whispers', 'answered', 'answers', 'laughed', 'continued',
-  'added', 'exclaimed', 'screamed', 'explained', 'begged', 'sighed', 'muttered', 'announced']);
+  'added', 'exclaimed', 'screamed', 'explained', 'begged', 'sighed', 'muttered', 'announced', 'shrugged', 'nodded', 'smiled', 'grinned',
+  'giggled', 'groaned', 'gasped', 'interrupted', 'insisted', 'agreed', 'warned', 'promised', 'suggested', 'responded', 'remarked', 'mumbled']);
 const isSpeechTag = (rest: string) => {
   const ws = rest.toLowerCase().match(/[a-z']+/g) ?? [];
   return ws.length === 0 || (ws.length <= 8 && ws.some((w) => SPEECH_VERBS.has(w)));
 };
 const asSpan = (t: string): SentenceSpan => ({ start: 0, end: t.length, text: t, ended: /[.!?]["')]*$/.test(t) });
 export function formulaSentences(raw: string): SentenceSpan[] {
-  const text = raw.replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\s+/g, ' ');
+  // A decimal point (4.5 billion) does not end a sentence.
+  const text = raw.replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\s+/g, ' ').replace(/(\d)\.(\d)/g, '$1\u2024$2');
   const out: string[] = [];
   const quotes: string[] = [];
   const narration = (text.match(/"/g) ?? []).length % 2 === 0
     // A quote that ends its own sentence ("Do you feel better now?") ends the sentence around it too.
-    ? text.replace(/"([^"]*)"/g, (_, q: string) => { quotes.push(q); return ` QQ${quotes.length - 1}QQ${/[.!?]\s*$/.test(q) ? '.' : ''} `; })
+    // ("Left!" or "Sharp right!" when a turn approached: the quote is inside the sentence, so it ends nothing.)
+    ? text.replace(/"([^"]*)"/g, (_, q: string, at: number, all: string) => {
+      quotes.push(q);
+      const next = all.slice(at + q.length + 2).trimStart();
+      return ` QQ${quotes.length - 1}QQ${/[.!?]\s*$/.test(q) && (!next || /^["A-Z]/.test(next)) ? '.' : ''} `;
+    })
     : text;
   let afterQuote = false;
   for (const s of splitSentences(narration)) {
@@ -286,12 +293,17 @@ export function formulaSentences(raw: string): SentenceSpan[] {
     }
     afterQuote = /QQ\d+QQ\.?$/.test(s.text);
     const rest = s.text.replace(/QQ\d+QQ/g, ' ').replace(/[,.!?;:\s]+/g, ' ').trim();
-    if (isSpeechTag(rest)) {
+    // A short tag right after what was said ("Please stay!" the students chanted.) or right before it with a comma
+    // (Then she said, "Corn has...") is a speech tag too, whatever its verb.
+    const short = (rest.match(/[A-Za-z']+/g) ?? []).length <= 5;
+    const tagAfter = /^QQ(\d+)QQ/.test(s.text) && /[,!?]\s*$/.test(quotes[Number(s.text.match(/^QQ(\d+)QQ/)?.[1] ?? 0)] ?? '');
+    const tagBefore = /,\s*QQ\d+QQ\.?$/.test(s.text);
+    if (isSpeechTag(rest) || (short && (tagAfter || tagBefore))) {
       // Spoken words: each of their sentences, with a closing comma read as the end of the sentence.
       for (const k of marks) for (const q of splitSentences(quotes[k])) out.push(q.text.replace(/,\s*$/, '.'));
     } else {
       out.push(s.text.replace(/QQ(\d+)QQ\./g, (m, k: string) => (/[.!?]\s*$/.test(quotes[Number(k)]) ? `QQ${k}QQ` : m)).replace(/\s*QQ(\d+)QQ\s*/g, (m, k: string) => `${m.startsWith(' ') ? ' ' : ''}"${quotes[Number(k)]}"${m.endsWith(' ') ? ' ' : ''}`).replace(/\s+([.,!?;:])/g, '$1').replace(/\s+/g, ' ').trim());
     }
   }
-  return out.map((t) => asSpan(t.trim())).filter((s) => s.text && checkSentence(s).complete);
+  return out.map((t) => asSpan(t.trim())).filter((s) => s.text && (checkSentence(s).complete || /^please,?\s+[a-z]+/i.test(s.text))).map((s) => asSpan(s.text.replace(/\u2024/g, '.')));
 }

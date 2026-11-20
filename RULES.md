@@ -201,6 +201,10 @@ noted if they are incomplete sentences on their own."
   A closing comma inside the quote ends it: "Wait and see," said Mother. gives Wait and see.
 - The speech tag (asked Quentin., she said, Farmer Fred said.) is never a sentence of its own.
 - A quote that is part of the sentence stays in it: The word fossil means "dug up."
-- Only complete sentences count (a subject and a verb, or a command): Germs! and Only a fish. are left out.
+- A short tag right after what was said ("Please stay!" the students chanted.) or right before it with a comma is a
+  speech tag whatever its verb.
+- A quote inside a sentence ends nothing: I called out "Left!" or "Sharp right!" when a turn approached.
+- A decimal point (4.5 billion) does not end a sentence.
+- Only complete sentences count (a subject and a verb, or a command, including "Please ..."): Germs! and Only a fish. are left out.
 
 `npm test` checks a passage with each case.
